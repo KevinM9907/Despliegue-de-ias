@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: winespa-api
+    env: python
+    plan: free
+    buildCommand: pip install -r winespa/requirements.txt && python winespa/manage.py migrate
+    startCommand: python winespa/manage.py runserver 0.0.0.0:$PORT
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DB_NAME
+        fromDatabase:
+          name: winespa-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: winespa-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: winespa-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: winespa-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: winespa-db
+          property: port
+      - key: ALLOWED_HOSTS
+        value: winespa-api.onrender.com
+
+databases:
+  - name: winespa-db
+    plan: free
